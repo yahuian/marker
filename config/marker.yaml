@@ -1,0 +1,5 @@
+# when the filename matches any of the regex, the file or dir will be skipped.
+skip_files:
+  # .git .idea .vscode etc
+  - '^\.'
+  - ".drawio$"
