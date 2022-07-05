@@ -43,7 +43,7 @@ func Init() {
 
 	// create default config file
 	if !exist {
-		if err := os.WriteFile(cfgPath, defaultFile, 0660); err != nil {
+		if err := os.WriteFile(cfgPath, defaultFile, 0600); err != nil {
 			log.Fatalln(err)
 		}
 	}
