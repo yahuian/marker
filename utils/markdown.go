@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"path"
 	"regexp"
 	"strings"
 )
@@ -16,7 +17,7 @@ func ParseMarkdownImage(text string) string {
 		}
 		image := v[1]
 		// skip online image
-		if strings.HasPrefix(image, "http://") || strings.HasPrefix(image, "https://") {
+		if strings.HasPrefix(image, "http://") || strings.HasPrefix(image, "https://") || path.IsAbs(image) {
 			continue
 		}
 		return image

@@ -36,6 +36,13 @@ func TestParseMarkdownImage(t *testing.T) {
 			},
 			want: "",
 		},
+		{
+			name: "abs",
+			args: args{
+				text: `![](/tmp/a.png)`,
+			},
+			want: "",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
