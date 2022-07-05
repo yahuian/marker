@@ -3,3 +3,8 @@ skip_files:
   # .git .idea .vscode etc
   - '^\.'
   - ".drawio$"
+image_types:
+  - ".png"
+  - ".jpg"
+  - ".gif"
+  - ".jpeg"

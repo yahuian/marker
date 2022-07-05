@@ -20,7 +20,8 @@ var defaultFile []byte
 
 // Val global config value
 var Val struct {
-	SkipFiles []string `mapstructure:"skip_files,omitempty"`
+	SkipFiles  []string `mapstructure:"skip_files,omitempty"`
+	ImageTypes []string `mapstructure:"image_types,omitempty"`
 }
 
 // TODO write comments

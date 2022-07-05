@@ -33,12 +33,6 @@ var removeCmd = &cobra.Command{
 	Long: `
 Remove relative path images that exist on your local computer but are not referenced.
 There can be multiple files and directories (support nested) in the root path.
-File struct must be like this:
-linux/crontab
-├── image
-│   ├── a.png
-│   └── b.png
-└── README.md
 `,
 	RunE: remove.RunE,
 	Example: `  marker remove
