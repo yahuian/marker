@@ -245,6 +245,9 @@ func getImages(fsys fs.FS, path string) ([]string, error) {
 			images = append(images, image)
 		}
 	}
+	if err := scan.Err(); err != nil {
+		return nil, err
+	}
 
 	return images, nil
 }
