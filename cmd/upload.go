@@ -25,36 +25,30 @@ import (
 	"fmt"
 	"io/fs"
 	"os"
-	"path"
 
+	"github.com/kolo/xmlrpc"
 	"github.com/spf13/cobra"
 	"github.com/yahuian/marker/config"
+	"github.com/yahuian/marker/pkg/metaweblog"
 	"github.com/yahuian/marker/pkg/tree"
 )
 
-var (
-	yes = false
-)
-
-// removeCmd represents the remove command
-var removeCmd = &cobra.Command{
-	Use:   "remove",
-	Short: "Remove useless images",
-	Long: `Remove relative path images that exist on your local computer but are not referenced.
-There can be multiple files and directories (support nested) in the root path.
-`,
-	RunE: runRemove,
-	Example: `  marker remove
-  marker remove -y
-`,
+// uploadCmd represents the upload command
+var uploadCmd = &cobra.Command{
+	Use:   "upload",
+	Short: "Upload local images to blog platform and generate a new markdown file.",
+	RunE:  runUpload,
 }
 
 func init() {
-	rootCmd.AddCommand(removeCmd)
-	removeCmd.Flags().BoolVarP(&yes, "yes", "y", false, "When yes is false only show useless images.")
+	rootCmd.AddCommand(uploadCmd)
 }
 
-func runRemove(cmd *cobra.Command, args []string) error {
+func runUpload(cmd *cobra.Command, args []string) error {
+	if len(config.Val.BlogPlatforms) == 0 {
+		return fmt.Errorf("blog platforms config not found")
+	}
+
 	fsys := os.DirFS(root)
 	t, err := tree.NewTree(fsys, func(d fs.DirEntry) bool {
 		return config.SkipFiles(d)
@@ -62,32 +56,28 @@ func runRemove(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return fmt.Errorf("new tree err: %w", err)
 	}
-	images, err := t.GetUselessImages(fsys, config.Val.ImageTypes)
-	if err != nil {
-		return fmt.Errorf("get useless images err: %w", err)
-	}
 
-	if len(images) == 0 {
-		fmt.Println("Well done, your images are all used.")
-		return nil
-	}
+	for _, v := range config.Val.BlogPlatforms {
+		client, err := metaweblog.NewClient(v.API)
+		if err != nil {
+			return fmt.Errorf("new client err: %w", err)
+		}
+		defer client.Close()
 
-	if !yes {
-		fmt.Println("These images are useless, you can remove them with --yes flag.")
-	}
-	for _, v := range images {
-		if !yes {
-			fmt.Println(v)
-			continue
+		upload := func(name, b64 string) (string, error) {
+			file := metaweblog.FileData{Bits: xmlrpc.Base64(b64), Name: name, Type: ""}
+			url, err := client.NewMediaObject(v.BlogID, v.Username, v.AppKey, file)
+			if err != nil {
+				return "", err
+			}
+			return url, nil
 		}
 
-		p := path.Join(root, v)
-		if err := os.Remove(p); err != nil {
-			return fmt.Errorf("remove %s err: %w", p, err)
+		if err := t.UploadImage(root, fsys, upload, v.Kind); err != nil {
+			return fmt.Errorf("upload image err: %w", err)
 		}
-
-		fmt.Printf("[removed] %s\n", p)
 	}
 
+	fmt.Println("finished upload.")
 	return nil
 }

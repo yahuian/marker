@@ -29,12 +29,15 @@ import (
 	"github.com/yahuian/marker/config"
 )
 
+var (
+	root = "./"
+)
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "marker",
 	Short: "A Markdown Helper",
-	Long: `
-Marker is a CLI tools for Markdown, support remove useless images,
+	Long: `Marker is a CLI tools for Markdown, support remove useless images,
 batch upload images to blog platform like cnblogs.
 `,
 	// Uncomment the following line if your bare application
@@ -66,4 +69,5 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(config.Init)
+	rootCmd.PersistentFlags().StringVar(&root, "root", "./", "Your file's root path.")
 }

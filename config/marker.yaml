@@ -8,3 +8,9 @@ image_types:
   - ".jpg"
   - ".gif"
   - ".jpeg"
+blog_platforms:
+  - kind: cnblogs
+    api: https://rpc.cnblogs.com/metaweblog/xxx
+    blog_id: ""
+    username: xxx
+    app_key: xxx

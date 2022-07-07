@@ -20,8 +20,17 @@ var defaultFile []byte
 
 // Val global config value
 var Val struct {
-	SkipFiles  []string `mapstructure:"skip_files,omitempty"`
-	ImageTypes []string `mapstructure:"image_types,omitempty"`
+	SkipFiles     []string       `mapstructure:"skip_files,omitempty"`
+	ImageTypes    []string       `mapstructure:"image_types,omitempty"`
+	BlogPlatforms []BlogPlatform `mapstructure:"blog_platforms,omitempty"`
+}
+
+type BlogPlatform struct {
+	Kind     string `mapstructure:"kind"`
+	API      string `mapstructure:"api"`
+	BlogID   string `mapstructure:"blog_id"`
+	Username string `mapstructure:"username"`
+	AppKey   string `mapstructure:"app_key"`
 }
 
 // TODO write comments

@@ -2,13 +2,18 @@ package tree
 
 import (
 	"bufio"
+	"encoding/base64"
 	"fmt"
 	"io/fs"
+	"log"
+	"os"
 	"path"
 	"strings"
 
 	"github.com/yahuian/marker/utils"
 )
+
+// refactor: use map[path]refer (like fstest.MapFS) data struct will be easier then trie
 
 type Tree struct {
 	Name  string  `json:"name,omitempty"`
@@ -156,6 +161,65 @@ func (root *Tree) scanMarkdown(fsys fs.FS) error {
 				if t != nil {
 					t.Refer++
 				}
+			}
+		}
+
+		queue = append(queue[1:], node.Sons...)
+	}
+
+	return nil
+}
+
+type UploadFunc func(name, b64 string) (string, error)
+
+// UploadImage parse markdown file and upload local images to blog platform, generate a new markdown file
+func (root *Tree) UploadImage(rootPath string, fsys fs.FS, upload UploadFunc, kind string) error {
+	queue := root.Sons
+
+	for len(queue) != 0 {
+		node := queue[0]
+
+		if !node.Dir && path.Ext(node.Name) == ".md" {
+			images, err := getImages(fsys, node.AbsPath())
+			if err != nil {
+				return err
+			}
+
+			imageMap := make(map[string]string, len(images))
+
+			for _, v := range images {
+				// get image base64
+				t := node.father.Search(v)
+				if t == nil {
+					continue
+				}
+				data, err := fs.ReadFile(fsys, t.AbsPath())
+				if err != nil {
+					return err
+				}
+
+				// upload
+				url, err := upload(path.Base(v), base64.StdEncoding.EncodeToString(data))
+				if err != nil {
+					log.Printf("[upload failed] %s\n", v)
+					continue
+				}
+				log.Printf("[upload success] %s\n", v)
+				imageMap[v] = url
+			}
+
+			// generate new markdown file
+			data, err := fs.ReadFile(fsys, node.AbsPath())
+			if err != nil {
+				return err
+			}
+			text := string(data)
+			for k, v := range imageMap {
+				text = strings.ReplaceAll(text, k, v)
+			}
+			name := path.Join(rootPath, node.AbsPath()+"."+kind)
+			if err := os.WriteFile(name, []byte(text), 0600); err != nil {
+				return err
 			}
 		}
 
