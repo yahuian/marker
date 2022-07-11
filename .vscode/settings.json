@@ -8,6 +8,7 @@
     "fsys",
     "mapstructure",
     "metaweblog",
+    "slicex",
     "testdata",
     "useage",
     "workdir",

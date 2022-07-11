@@ -10,6 +10,7 @@ import (
 	"path"
 	"strings"
 
+	"github.com/yahuian/gox/slicex"
 	"github.com/yahuian/marker/utils"
 )
 
@@ -125,22 +126,13 @@ func (root *Tree) GetUselessImages(fsys fs.FS, imageTypes []string) ([]string, e
 	queue := root.Sons
 	for len(queue) != 0 {
 		node := queue[0]
-		if !node.Dir && node.Refer < 1 && in(imageTypes, path.Ext(node.Name)) {
+		if !node.Dir && node.Refer < 1 && slicex.Contain(imageTypes, path.Ext(node.Name)) {
 			res = append(res, node.AbsPath())
 		}
 		queue = append(queue[1:], node.Sons...)
 	}
 
 	return res, nil
-}
-
-func in(list []string, s string) bool {
-	for _, v := range list {
-		if s == v {
-			return true
-		}
-	}
-	return false
 }
 
 // scanMarkdown scan markdown files and count images refer number

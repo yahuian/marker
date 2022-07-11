@@ -175,6 +175,8 @@ github.com/subosito/gotenv v1.3.0 h1:mjC+YW8QpAdXibNi+vNWgzmgBH4+5l5dCXv8cNysBLI
 github.com/subosito/gotenv v1.3.0/go.mod h1:YzJjq/33h7nrwdY+iHMhEOEEbW0ovIz0tB6t6PwAXzs=
 github.com/yahuian/gox v0.0.0-20220703103301-e5a573263929 h1:29RPD/NVxrvc0mUQIP4CRs8dQthckjh3JFUsU8XDjBI=
 github.com/yahuian/gox v0.0.0-20220703103301-e5a573263929/go.mod h1:lh75ecLK7EYT2+lbOThmnE7OSaoCQTWwdkVAjgwgV40=
+github.com/yahuian/gox v0.0.0-20220710154750-9e069dd57c5e h1:Bym5fvpmbNwQE5dJA/imeiQE2ogeO1o9U4MsjYBuuvc=
+github.com/yahuian/gox v0.0.0-20220710154750-9e069dd57c5e/go.mod h1:lh75ecLK7EYT2+lbOThmnE7OSaoCQTWwdkVAjgwgV40=
 github.com/yuin/goldmark v1.1.25/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.27/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.32/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=

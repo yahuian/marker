@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/spf13/cobra v1.5.0
 	github.com/spf13/viper v1.12.0
-	github.com/yahuian/gox v0.0.0-20220703103301-e5a573263929
+	github.com/yahuian/gox v0.0.0-20220710154750-9e069dd57c5e
 )
 
 require (
